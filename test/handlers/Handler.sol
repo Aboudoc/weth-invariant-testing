@@ -32,6 +32,11 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         _;
     }
 
+    modifier useActor(uint256 actorIndexSeed) {
+        currentActor = _actors.rand(actorIndexSeed);
+        _;
+    }
+
     constructor(WETH9 _weth) {
         weth = _weth;
         deal(address(this), ETH_SUPPLY);
@@ -49,14 +54,13 @@ contract Handler is CommonBase, StdCheats, StdUtils {
 
     function withdraw(uint256 actorSeed, uint256 amount)
         public
+        useActor(actorSeed)
         countCall("withdraw")
     {
-        address caller = _actors.rand(actorSeed);
-
-        amount = bound(amount, 0, weth.balanceOf(caller));
+        amount = bound(amount, 0, weth.balanceOf(currentActor));
         if (amount == 0) ghost_zeroWithdrawals++;
 
-        vm.startPrank(caller);
+        vm.startPrank(currentActor);
         weth.withdraw(amount);
 
         _pay(address(this), amount);
