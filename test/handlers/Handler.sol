@@ -66,9 +66,9 @@ contract Handler is CommonBase, StdCheats, StdUtils {
     // To use these iterators from our tests,
     // we can expose them from the handler (forEachActor and reduceActors)
 
-    // function forEachActor(function(address) external func) public {
-    //     return _actors.forEach(func);
-    // }
+    function forEachActor(function(address) external func) public {
+        return _actors.forEach(func);
+    }
 
     // error[9553]: TypeError: Invalid type for argument in function call. Invalid implicit conversion from function (address) external to function (address) external returns (address[] memory) requested.
 

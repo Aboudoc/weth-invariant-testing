@@ -26,10 +26,9 @@ library LibAddressSet {
         return s.addrs.length;
     }
 
-    function forEach(
-        AddressSet storage s,
-        function(address) external returns (address[] memory) func
-    ) internal {
+    function forEach(AddressSet storage s, function(address) external func)
+        internal
+    {
         for (uint256 i; i < s.addrs.length; ++i) {
             func(s.addrs[i]);
         }

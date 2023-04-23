@@ -90,4 +90,14 @@ contract WETH9Invariants is StdInvariant, Test {
     {
         return balance + weth.balanceOf(caller);
     }
+
+    // No individual account balance can exceed the
+    // WETH totalSupply().
+    function invariant_depositorBalances() public {
+        handler.forEachActor(this.assertAccountBalanceLteTotalSupply);
+    }
+
+    function assertAccountBalanceLteTotalSupply(address account) external {
+        assertLe(weth.balanceOf(account), weth.totalSupply());
+    }
 }
