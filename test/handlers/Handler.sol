@@ -140,8 +140,6 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         return _actors.forEach(func);
     }
 
-    // error[9553]: TypeError: Invalid type for argument in function call. Invalid implicit conversion from function (address) external to function (address) external returns (address[] memory) requested.
-
     function reduceActors(
         uint256 acc,
         function(uint256, address) external returns (uint256) func
