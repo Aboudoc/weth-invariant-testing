@@ -26,6 +26,18 @@ library LibAddressSet {
         return s.addrs.length;
     }
 
+    function rand(AddressSet storage s, uint256 seed)
+        internal
+        view
+        returns (address)
+    {
+        if (s.addrs.length > 0) {
+            return s.addrs[seed % s.addrs.length];
+        } else {
+            return address(0xc0ffee);
+        }
+    }
+
     function forEach(AddressSet storage s, function(address) external func)
         internal
     {

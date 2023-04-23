@@ -47,18 +47,23 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         ghost_depositSum += amount;
     }
 
-    function withdraw(uint256 amount) public countCall("withdraw") {
-        amount = bound(amount, 0, weth.balanceOf(msg.sender));
+    function withdraw(uint256 actorSeed, uint256 amount)
+        public
+        countCall("withdraw")
+    {
+        address caller = _actors.rand(actorSeed);
+
+        amount = bound(amount, 0, weth.balanceOf(caller));
         if (amount == 0) ghost_zeroWithdrawals++;
 
-        vm.startPrank(currentActor);
+        vm.startPrank(caller);
         weth.withdraw(amount);
 
         _pay(address(this), amount);
 
         vm.stopPrank();
 
-        ghost_withdrawSum -= amount;
+        ghost_withdrawSum += amount;
     }
 
     function sendFallback(uint256 amount)

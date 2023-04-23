@@ -27,3 +27,15 @@ Although we performed 1000 runs, the summary printed here is a snapshot of calls
 The total number of calls in our summary should always be the same as the depth parameter set for invariant tests in foundry.toml
 
 ## Reusing actors
+
+```sh
+Running 1 test for test/WETH9.invariants.t.sol:WETH9Invariants
+[PASS] invariant_callSummary() (runs: 2000, calls: 50000, reverts: 2)
+Logs:
+  Call summary:
+  deposit 5
+  withdraw 8
+  sendFallback 12
+  zero withdrawals 3
+
+```
