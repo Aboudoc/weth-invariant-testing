@@ -84,7 +84,7 @@ Running 5 tests for test/WETH9.invariants.t.sol:WETH9Invariants
 Test result: ok. 5 passed; 0 failed; finished in 19.99s
 ```
 
-## More resources
+## More resources
 
 [Maple Finance invariant tests repo](https://github.com/maple-labs/maple-core-v2/tree/main/tests/invariants)
 
