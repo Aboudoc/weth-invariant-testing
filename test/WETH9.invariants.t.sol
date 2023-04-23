@@ -5,7 +5,7 @@ pragma solidity ^0.8.13;
 import {Test} from "forge-std/Test.sol";
 import {StdInvariant} from "forge-std/StdInvariant.sol";
 import {WETH9} from "../src/WETH9.sol";
-import {Handler} from "./handlers/Handler.sol";
+import {Handler, ETH_SUPPLY} from "./handlers/Handler.sol";
 
 contract WETH9Invariants is StdInvariant, Test {
     WETH9 public weth;
@@ -20,13 +20,14 @@ contract WETH9Invariants is StdInvariant, Test {
         // from forge-std/StdInvariants to specify
         // the exact selectors we want the fuzzer
         // to target and exclude everything else
-        bytes4[] memory selectors = new bytes4[](6);
+        bytes4[] memory selectors = new bytes4[](7);
         selectors[0] = Handler.deposit.selector;
         selectors[1] = Handler.withdraw.selector;
         selectors[2] = Handler.sendFallback.selector;
         selectors[3] = Handler.approve.selector;
         selectors[4] = Handler.transfer.selector;
         selectors[5] = Handler.transferFrom.selector;
+        selectors[6] = Handler.forcePush.selector;
 
         targetSelector(
             FuzzSelector({addr: address(handler), selectors: selectors})
@@ -54,10 +55,7 @@ contract WETH9Invariants is StdInvariant, Test {
     // ETH balance plus the WETH totalSupply() should always
     // equal the total ETH_SUPPLY.
     function invariant_conservationOfETH() public {
-        assertEq(
-            handler.ETH_SUPPLY(),
-            address(handler).balance + weth.totalSupply()
-        );
+        assertEq(ETH_SUPPLY, address(handler).balance + weth.totalSupply());
     }
 
     // The WETH contract's Ether balance should always be

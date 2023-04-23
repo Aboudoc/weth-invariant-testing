@@ -5,6 +5,14 @@ import {WETH9} from "../../src/WETH9.sol";
 import {AddressSet, LibAddressSet} from "../helpers/AddressSet.sol";
 import {console} from "forge-std/console.sol";
 
+uint256 constant ETH_SUPPLY = 120500000 ether;
+
+contract ForcePush {
+    constructor(address dst) payable {
+        selfdestruct(payable(dst));
+    }
+}
+
 contract Handler is CommonBase, StdCheats, StdUtils {
     using LibAddressSet for AddressSet;
 
@@ -13,8 +21,6 @@ contract Handler is CommonBase, StdCheats, StdUtils {
     uint256 public ghost_depositSum;
     uint256 public ghost_withdrawSum;
     uint256 public ghost_zeroWithdrawals;
-
-    uint public constant ETH_SUPPLY = 120500000 ether;
 
     AddressSet internal _actors;
     address internal currentActor;
@@ -131,6 +137,11 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         require(success, "sendFallback failed");
 
         ghost_depositSum += amount;
+    }
+
+    function forcePush(uint256 amount) public countCall("forcePush") {
+        amount = bound(amount, 0, address(this).balance);
+        new ForcePush{value: amount}(address(weth));
     }
 
     // To use these iterators from our tests,
