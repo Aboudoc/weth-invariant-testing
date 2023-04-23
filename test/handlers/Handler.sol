@@ -70,6 +70,53 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         ghost_withdrawSum += amount;
     }
 
+    function approve(
+        uint256 actorSeed,
+        uint256 spenderSeed,
+        uint256 amount
+    ) public useActor(actorSeed) countCall("approve") {
+        address spender = _actors.rand(spenderSeed);
+
+        vm.prank(currentActor);
+        weth.approve(spender, amount);
+    }
+
+    function transfer(
+        uint256 actorSeed,
+        uint256 toSeed,
+        uint256 amount
+    ) public useActor(actorSeed) countCall("transfer") {
+        address to = _actors.rand(toSeed);
+
+        amount = bound(amount, 0, weth.balanceOf(currentActor));
+
+        vm.prank(currentActor);
+        weth.transfer(to, amount);
+    }
+
+    function transferFrom(
+        uint256 actorSeed,
+        uint256 fromSeed,
+        uint256 toSeed,
+        bool _approve,
+        uint256 amount
+    ) public useActor(actorSeed) countCall("transferFrom") {
+        address from = _actors.rand(fromSeed);
+        address to = _actors.rand(toSeed);
+
+        amount = bound(amount, 0, weth.balanceOf(from));
+
+        if (_approve) {
+            vm.prank(from);
+            weth.approve(currentActor, amount);
+        } else {
+            amount = bound(amount, 0, weth.allowance(currentActor, from));
+        }
+
+        vm.prank(currentActor);
+        weth.transferFrom(from, to, amount);
+    }
+
     function sendFallback(uint256 amount)
         public
         createActor

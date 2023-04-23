@@ -39,3 +39,22 @@ Logs:
   zero withdrawals 3
 
 ```
+
+## Including transfers
+
+Note that we call `bound` twice in `transferFrom` to ensure the transfer value is less than the `from` account's balance and that `currentActor` has a sufficient allowance to perform the third-party transfer.
+
+If you look carefully at this, you may notice we have a similar problem to the zero amount issue we just solved for `withdraw`: even though we're reusing known callers, most of the time `amount` will be zero, since it's unlikely the `caller` has an approval from the `from` account. (You can use the same call summary process to debug yourself if you're interested).
+
+```sh
+Running 1 test for test/WETH9.invariants.t.sol:WETH9Invariants
+[PASS] invariant_callSummary() (runs: 1000, calls: 25000, reverts: 58)
+Logs:
+  Call summary:
+  deposit 5
+  withdraw 3
+  sendFallback 0
+  zero withdrawals 0
+
+Test result: ok. 1 passed; 0 failed; finished in 10.42s
+```
