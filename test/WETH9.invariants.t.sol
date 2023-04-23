@@ -63,7 +63,9 @@ contract WETH9Invariants is StdInvariant, Test {
     function invariant_solvencyDeposits() public {
         assertEq(
             address(weth).balance,
-            handler.ghost_depositSum() - handler.ghost_withdrawSum()
+            handler.ghost_depositSum() +
+                handler.ghost_forcePushSum() -
+                handler.ghost_withdrawSum()
         );
     }
 
@@ -81,7 +83,10 @@ contract WETH9Invariants is StdInvariant, Test {
 
     function invariant_solvencyBalances() public {
         uint256 sumOfBalances = handler.reduceActors(0, this.accumulateBalance);
-        assertEq(address(weth).balance, sumOfBalances);
+        assertEq(
+            address(weth).balance - handler.ghost_forcePushSum(),
+            sumOfBalances
+        );
     }
 
     function accumulateBalance(uint256 balance, address caller)

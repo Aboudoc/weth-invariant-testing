@@ -21,6 +21,7 @@ contract Handler is CommonBase, StdCheats, StdUtils {
     uint256 public ghost_depositSum;
     uint256 public ghost_withdrawSum;
     uint256 public ghost_zeroWithdrawals;
+    uint256 public ghost_forcePushSum;
 
     AddressSet internal _actors;
     address internal currentActor;
@@ -142,6 +143,7 @@ contract Handler is CommonBase, StdCheats, StdUtils {
     function forcePush(uint256 amount) public countCall("forcePush") {
         amount = bound(amount, 0, address(this).balance);
         new ForcePush{value: amount}(address(weth));
+        ghost_forcePushSum += amount;
     }
 
     // To use these iterators from our tests,

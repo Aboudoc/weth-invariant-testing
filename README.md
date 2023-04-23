@@ -74,6 +74,16 @@ https://github.com/foundry-rs/foundry/issues/478
 
 ## Accounting for selfdestruct
 
+```sh
+Running 5 tests for test/WETH9.invariants.t.sol:WETH9Invariants
+[PASS] invariant_callSummary() (runs: 1000, calls: 25000, reverts: 55)
+[PASS] invariant_conservationOfETH() (runs: 1000, calls: 25000, reverts: 55)
+[PASS] invariant_depositorBalances() (runs: 1000, calls: 25000, reverts: 55)
+[PASS] invariant_solvencyBalances() (runs: 1000, calls: 25000, reverts: 55)
+[PASS] invariant_solvencyDeposits() (runs: 1000, calls: 25000, reverts: 55)
+Test result: ok. 5 passed; 0 failed; finished in 19.99s
+```
+
 ## More resources
 
 [Maple Finance invariant tests repo](https://github.com/maple-labs/maple-core-v2/tree/main/tests/invariants)
