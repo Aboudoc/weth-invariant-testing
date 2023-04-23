@@ -51,8 +51,6 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         ghost_withdrawSum -= amount;
     }
 
-    receive() external payable {}
-
     function sendFallback(uint256 amount) public createActor {
         amount = bound(amount, 0, address(this).balance);
 
@@ -65,12 +63,30 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         ghost_depositSum += amount;
     }
 
-    function _pay(address to, uint256 amount) internal {
-        (bool success, ) = to.call{value: amount}("");
-        require(success, "call failed");
+    // To use these iterators from our tests,
+    // we can expose them from the handler (forEachActor and reduceActors)
+
+    // function forEachActor(function(address) external func) public {
+    //     return _actors.forEach(func);
+    // }
+
+    // error[9553]: TypeError: Invalid type for argument in function call. Invalid implicit conversion from function (address) external to function (address) external returns (address[] memory) requested.
+
+    function reduceActors(
+        uint256 acc,
+        function(uint256, address) external returns (uint256) func
+    ) public returns (uint256) {
+        return _actors.reduce(acc, func);
     }
 
     function actors() external returns (address[] memory) {
         return _actors.addrs;
     }
+
+    function _pay(address to, uint256 amount) internal {
+        (bool success, ) = to.call{value: amount}("");
+        require(success, "call failed");
+    }
+
+    receive() external payable {}
 }
