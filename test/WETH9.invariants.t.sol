@@ -100,4 +100,8 @@ contract WETH9Invariants is StdInvariant, Test {
     function assertAccountBalanceLteTotalSupply(address account) external {
         assertLe(weth.balanceOf(account), weth.totalSupply());
     }
+
+    function invariant_callSummary() public view {
+        handler.callSummary();
+    }
 }
